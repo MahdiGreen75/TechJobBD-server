@@ -62,8 +62,34 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
+        const database = client.db("TechJobBDDB");
+        app.get("/on-site", async (req, res) => {
+            const onSiteJobCollection = database.collection("onSiteJobCollection");
+            const cursor = onSiteJobCollection.find();
+            const onSiteJobs = await cursor.toArray();
+            res.send(onSiteJobs);
+        })
 
+        app.get("/remote", async (req, res) => {
+            const remoteJobCollection = database.collection("remoteJobCollection");
+            const cursor = remoteJobCollection.find();
+            const Jobs = await cursor.toArray();
+            res.send(Jobs);
+        })
 
+        app.get("/hybrid", async (req, res) => {
+            const hybridJobCollection = database.collection("hybridJobCollection");
+            const cursor = hybridJobCollection.find();
+            const hybridJobs = await cursor.toArray();
+            res.send(hybridJobs);
+        })
+
+        app.get("/part-time", async (req, res) => {
+            const partTimeJobCollection = database.collection("partTimeJobCollection");
+            const cursor = partTimeJobCollection.find();
+            const partTimeJobs = await cursor.toArray();
+            res.send(partTimeJobs);
+        })
 
 
         // Send a ping to confirm a successful connection
@@ -71,7 +97,7 @@ async function run() {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
-        await client.close();
+        // await client.close();
     }
 }
 run().catch(console.dir);
