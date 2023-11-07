@@ -12,6 +12,7 @@ const port = process.env.PORT || 5000;
 //     origin: ['http://localhost:5173'],
 //     credentials: true
 // }));
+app.use(cors());
 app.use(express.json());
 // app.use(cookieParser())
 
@@ -91,6 +92,40 @@ async function run() {
             res.send(partTimeJobs);
         })
 
+        app.get("/all-jobs", async (req, res) => {
+            const onSiteJobCollection = database.collection("onSiteJobCollection");
+            const cursor1 = onSiteJobCollection.find();
+            const onSiteJobs = await cursor1.toArray();
+
+            const remoteJobCollection = database.collection("remoteJobCollection");
+            const cursor2 = remoteJobCollection.find();
+            const Jobs = await cursor2.toArray();
+
+            const hybridJobCollection = database.collection("hybridJobCollection");
+            const cursor3 = hybridJobCollection.find();
+            const hybridJobs = await cursor3.toArray();
+
+            const partTimeJobCollection = database.collection("partTimeJobCollection");
+            const cursor4 = partTimeJobCollection.find();
+            const partTimeJobs = await cursor4.toArray();
+
+            const bigArr = [...onSiteJobs, ...Jobs, ...hybridJobs, ...partTimeJobs];
+            res.send(bigArr);
+        })
+
+        app.post("/applied-jobs", async (req, res) => {
+            const doc = req.body;
+            const appliedJobColleciton = database.collection("appliedJobCollection");
+            const result = await appliedJobColleciton.insertOne(doc);
+            res.send(result);
+        })
+
+        app.get("/get-applied-jobs", async (req, res) => {
+            const appliedJobColleciton = database.collection("appliedJobCollection");
+            const cursor = appliedJobColleciton.find();
+            const getAppliedJobs = await cursor.toArray();
+            res.send(getAppliedJobs);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
