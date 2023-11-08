@@ -128,6 +128,16 @@ async function run() {
             res.send(result);
         })
 
+        app.get("/get-my-jobs", async (req, res) => {
+            const email = req.query?.email;
+            // console.log(email);
+            const userJobCollection = database.collection("userJobCollection");
+            const query = {"job_setter_email": email};
+            const cursor = userJobCollection.find(query);
+            const getMyJobs = await cursor.toArray();
+            res.send(getMyJobs);
+        })
+
         app.get("/get-applied-jobs", async (req, res) => {
             const appliedJobColleciton = database.collection("appliedJobCollection");
             const cursor = appliedJobColleciton.find();
