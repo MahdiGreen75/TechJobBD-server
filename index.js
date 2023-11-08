@@ -120,6 +120,14 @@ async function run() {
             res.send(result);
         })
 
+        app.post("/my-jobs", async (req, res) => {
+            const doc = req.body;
+            console.log(doc);
+            const userJobCollection = database.collection("userJobCollection");
+            const result = await userJobCollection.insertOne(doc);
+            res.send(result);
+        })
+
         app.get("/get-applied-jobs", async (req, res) => {
             const appliedJobColleciton = database.collection("appliedJobCollection");
             const cursor = appliedJobColleciton.find();
