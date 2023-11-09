@@ -122,7 +122,7 @@ async function run() {
 
         app.post("/my-jobs", async (req, res) => {
             const doc = req.body;
-            console.log(doc);
+            // console.log(doc);
             const userJobCollection = database.collection("userJobCollection");
             const result = await userJobCollection.insertOne(doc);
             res.send(result);
@@ -132,7 +132,7 @@ async function run() {
             const email = req.query?.email;
             // console.log(email);
             const userJobCollection = database.collection("userJobCollection");
-            const query = {"job_setter_email": email};
+            const query = { "job_setter_email": email };
             const cursor = userJobCollection.find(query);
             const getMyJobs = await cursor.toArray();
             res.send(getMyJobs);
@@ -145,12 +145,29 @@ async function run() {
             res.send(getAppliedJobs);
         })
 
-        app.delete("/user/:deleteId", async(req, res)=>{
+        app.delete("/user/:deleteId", async (req, res) => {
             const deleteId = req.params.deleteId;
             const userJobCollection = database.collection("userJobCollection");
-            const query = {_id: new ObjectId(deleteId)}
+            const query = { _id: new ObjectId(deleteId) }
             const result = await userJobCollection.deleteOne(query);
             res.send(result);
+        })
+
+        app.patch('/user/:updateId', async (req, res) => {
+            const updateId = req.params.updateId;
+            const filter = { _id: new ObjectId(updateId) };
+            const updatedValue = req.body;
+
+            const updateDoc = {
+                $set: {
+                    ...updatedValue
+                }
+            };
+
+            const userJobCollection = database.collection("userJobCollection");
+            const result = await userJobCollection.updateOne(filter, updateDoc);
+            res.send(result);
+            // console.log(updateId, updatedValue);
         })
 
         // Send a ping to confirm a successful connection
