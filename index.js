@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 // const jwt = require("jsonwebtoken");
 // const cookieParser = require('cookie-parser');
@@ -143,6 +143,14 @@ async function run() {
             const cursor = appliedJobColleciton.find();
             const getAppliedJobs = await cursor.toArray();
             res.send(getAppliedJobs);
+        })
+
+        app.delete("/user/:deleteId", async(req, res)=>{
+            const deleteId = req.params.deleteId;
+            const userJobCollection = database.collection("userJobCollection");
+            const query = {_id: new ObjectId(deleteId)}
+            const result = await userJobCollection.deleteOne(query);
+            res.send(result);
         })
 
         // Send a ping to confirm a successful connection
