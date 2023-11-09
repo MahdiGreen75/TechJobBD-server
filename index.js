@@ -109,7 +109,11 @@ async function run() {
             const cursor4 = partTimeJobCollection.find();
             const partTimeJobs = await cursor4.toArray();
 
-            const bigArr = [...onSiteJobs, ...Jobs, ...hybridJobs, ...partTimeJobs];
+            const UserJobCollection = database.collection("userJobCollection");
+            const cursor5 = UserJobCollection.find();
+            const UserJobs = await cursor5.toArray();
+
+            const bigArr = [...onSiteJobs, ...Jobs, ...hybridJobs, ...partTimeJobs, ...UserJobs];
             res.send(bigArr);
         })
 
